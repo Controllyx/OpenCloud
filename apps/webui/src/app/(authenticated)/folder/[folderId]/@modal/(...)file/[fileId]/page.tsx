@@ -1,14 +1,26 @@
-import Image from "next/image";
 import { cookies } from "next/headers";
 import { z } from "zod";
+import path from "path";
 
 import { env } from "@/env/env.mjs";
 import { PreviewPane } from "@/components/file-system/file-view/preview-pane";
 
 export default async function FileView({ params }: { params: { fileId: string } }) {
-    const fileDetailsPromise = getFileDetails(params.fileId);
+    const cookieStore = cookies();
 
-    const [fileDetails] = await Promise.all([fileDetailsPromise]);
+    const accessToken = cookieStore.get("AccessToken");
+
+    if (!accessToken) {
+        return (
+            <div>
+                {/* TODO: Add auth check failed message, not required since it should be impossible to get here without valid auth */}
+            </div>
+        );
+    }
+
+    const fileId = path.parse(params.fileId).name;
+
+    const fileDetails = await getFileDetails(fileId);
 
     return (
         <>
