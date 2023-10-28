@@ -14,8 +14,8 @@ export default async function FolderView({ params }: { params: { folderId: strin
     const [folderDetails, folderContents] = await Promise.all([folderDetailsPromise, folderContentsPromise]);
 
     return (
-        <div className="h-full w-full px-6 py-4">
-            <div className="mb-6 flex h-full flex-row items-center justify-between rounded-2xl border-2 border-zinc-300 p-1 dark:border-zinc-800">
+        <div className="h-full w-full px-5 py-4">
+            <div className="mb-6 flex flex-row items-center justify-between rounded-2xl border-2 border-zinc-300 p-1 dark:border-zinc-800">
                 <button className="flex items-center rounded-xl px-5 pb-2.5 pt-2.5 hover:bg-zinc-200 dark:hover:bg-zinc-900">
                     <Upload className="mr-4 h-6" />
                     <span className="items-center self-center whitespace-nowrap text-lg font-semibold">Upload</span>
@@ -29,11 +29,13 @@ export default async function FolderView({ params }: { params: { folderId: strin
                 </button>
             </div>
 
-            <div className="mb-6">
-                <Breadcrumb folderDetails={folderDetails.data} />
-            </div>
+            <div className="mx-0.5">
+                <div className="mb-6">
+                    <Breadcrumb folderDetails={folderDetails.data} />
+                </div>
 
-            <GridLayout folders={folderContents.data.folders} files={folderContents.data.files} />
+                <GridLayout folders={folderContents.data.folders} files={folderContents.data.files} />
+            </div>
         </div>
     );
 }
