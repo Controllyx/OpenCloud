@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "dev": "run-p dev:server db:studio",
-        "dev:server": "tsup src/index.ts --format esm --watch --onSuccess \"node dist/index.mjs\"",
+        "dev:server": "prisma generate && tsup src/index.ts --format esm --watch --onSuccess \"node dist/index.mjs\"",
         "db:studio": "prisma studio --browser none",
         "db:push": "prisma db push",
         "db:generate": "prisma generate",
