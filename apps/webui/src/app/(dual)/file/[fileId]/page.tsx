@@ -1,9 +1,12 @@
 import { Metadata } from "next";
 import { cookies } from "next/headers";
+import Link from "next/link";
 import { z } from "zod";
 import path from "path";
+import { X } from "lucide-react";
 
 import { env } from "@/env/env.mjs";
+import { getServerSession } from "@/components/auth/server-session";
 import { PreviewPane } from "@/components/file-system/file-view/preview-pane";
 
 export async function generateMetadata({ params }: { params: { fileId: string } }): Promise<Metadata> {
@@ -33,6 +36,8 @@ export async function generateMetadata({ params }: { params: { fileId: string } 
 }
 
 export default async function FileView({ params }: { params: { fileId: string } }) {
+    const session = await getServerSession();
+
     const fileId = path.parse(params.fileId).name;
     const fileDetailsPromise = getFileDetails(fileId);
 
@@ -65,7 +70,18 @@ export default async function FileView({ params }: { params: { fileId: string } 
                         </span>
                     </div>
 
-                    <div className="flex basis-1/3"></div>
+                    <div className="flex basis-1/3 items-center justify-end">
+                        {session.status === "success" && (
+                            <div className="mx-4">
+                                <Link
+                                    href={`/folder/${fileDetails.data.parentId}`}
+                                    className="flex items-center rounded-xl p-1 hover:bg-zinc-200 dark:hover:bg-zinc-900"
+                                >
+                                    <X className="h-10 w-10" />
+                                </Link>
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 <div className="relative h-full overflow-hidden">
