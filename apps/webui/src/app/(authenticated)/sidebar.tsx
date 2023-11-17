@@ -8,6 +8,10 @@ import { getServerSession } from "@/components/auth/server-session";
 export default async function Navbar() {
     const session = await getServerSession();
 
+    if (session.status === "error") {
+        return <></>;
+    }
+
     return (
         <>
             <div className="h-full w-full border-r border-zinc-300 dark:border-zinc-700">

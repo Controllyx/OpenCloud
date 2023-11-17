@@ -3,25 +3,32 @@ import * as z from "zod";
 
 import { env } from "@/env/env.mjs";
 
-export async function getServerSession() {
+type GetServerSessionReturnType =
+    | {
+          status: "success";
+          data: z.infer<typeof getSessionDetailsSchema>;
+      }
+    | {
+          status: "error";
+          error: Error | null;
+      };
+
+export async function getServerSession(): Promise<GetServerSessionReturnType> {
     const response = await fetch(`${env.NEXT_PUBLIC_OPENCLOUD_SERVER_URL}/v1/auth/session`, {
         headers: { Cookie: cookies().toString() },
-        next: {
-            tags: ["session"],
-        },
     });
 
     if (!response.ok) {
-        throw new Error("Failed to fetch data");
+        return { status: "error", error: new Error("Failed to fetch data") };
     }
 
     const parsedSessionDetails = getSessionDetailsSchema.safeParse(await response.json());
 
     if (parsedSessionDetails.success === false) {
-        throw new Error("Failed to fetch data");
+        return { status: "error", error: new Error("Failed to fetch data") };
     }
 
-    return parsedSessionDetails;
+    return { status: "success", data: parsedSessionDetails.data };
 }
 
 const getSessionDetailsSchema = z.object({
