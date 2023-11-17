@@ -1,4 +1,4 @@
-import Modal from "@/components/file-system/file-view/modal";
+import Modal from "@/components/file-system/modal";
 
 export default function FileViewModalLayout({ children }: { children: React.ReactNode }) {
     return (
