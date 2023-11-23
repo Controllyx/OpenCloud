@@ -67,16 +67,17 @@ model UploadToken {
 }
 
 model Folder {
-    id             String     @id @default(cuid())
+    id             String         @id @default(cuid())
     folderName     String
     ownerId        String
-    type           FolderType @default(STANDARD)
-    parentFolder   Folder?    @relation("NestedFolder", fields: [parentFolderId], references: [id])
+    type           FolderType     @default(STANDARD)
+    parentFolder   Folder?        @relation("NestedFolder", fields: [parentFolderId], references: [id])
     parentFolderId String?
-    childFolders   Folder[]   @relation("NestedFolder")
+    childFolders   Folder[]       @relation("NestedFolder")
     childFiles     File[]
-    createdAt      DateTime   @default(now())
-    updatedAt      DateTime   @default(now()) @updatedAt
+    displayOrders  DisplayOrder[]
+    createdAt      DateTime       @default(now())
+    updatedAt      DateTime       @default(now()) @updatedAt
 
     @@map("Folders")
 }
@@ -94,6 +95,19 @@ model File {
     updatedAt    DateTime   @default(now()) @updatedAt
 
     @@map("Files")
+}
+
+model DisplayOrder {
+    id        String        @id @default(cuid())
+    userId    String
+    folder    Folder        @relation(fields: [folderId], references: [id])
+    folderId  String
+    Type      SortType      @default(NAME)
+    Order     SortDirection @default(ASC)
+    createdAt DateTime      @default(now())
+    updatedAt DateTime      @default(now()) @updatedAt
+
+    @@map("DisplayOrders")
 }
 
 // Enums
@@ -120,4 +134,15 @@ enum FileAccess {
     PRIVATE
     PROTECTED
     PUBLIC
+}
+
+enum SortType {
+    NAME
+    DATE_CREATED
+    SIZE
+}
+
+enum SortDirection {
+    ASC
+    DESC
 }
