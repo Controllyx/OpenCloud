@@ -65,9 +65,10 @@ export async function tokenUploadHandler(this: FastifyInstance, request: Fastify
     for (const ruleId of uploadToken.accessControlRuleIds) {
         const result = await this.verifyAccessControlRule(request, ruleId);
         if (!result) {
-            return reply
-                .code(401)
-                .send({ status: "fail", error: "Unable to verify compliance with one or more access control rules" });
+            return reply.code(401).send({
+                status: "fail",
+                error: "Failed to verify one or more access control rules on this upload token",
+            });
         }
     }
 
