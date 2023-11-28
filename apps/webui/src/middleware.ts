@@ -20,6 +20,11 @@ export async function middleware(request: NextRequest) {
 
     // If access token found, continue to page
     if (request.cookies.has("AccessToken")) {
+        // If trying to access unauthenticated (only) page, redirect to home
+        if (request.nextUrl.pathname.startsWith("/login")) {
+            return NextResponse.redirect(new URL("/home", request.url));
+        }
+
         return NextResponse.next();
     }
 
