@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { z } from "zod";
 import path from "path";
-import { X } from "lucide-react";
+import { Download, X } from "lucide-react";
 
 import { env } from "@/env/env.mjs";
 import { getServerSession } from "@/components/auth/server-session";
@@ -71,8 +71,14 @@ export default async function FileView({ params }: { params: { fileId: string } 
                     </div>
 
                     <div className="flex basis-1/3 items-center justify-end">
+                        <a
+                            href={`${env.NEXT_PUBLIC_OPENCLOUD_SERVER_URL}/v1/files/download/${fileId}`}
+                            className=" mr-1.5 flex cursor-pointer items-center rounded-lg p-0.5 hover:bg-zinc-200 dark:hover:bg-zinc-900"
+                        >
+                            <Download className="m-1 h-8 w-8" />
+                        </a>
                         {session.status === "success" && (
-                            <div className="mx-4">
+                            <div className="mr-4">
                                 <Link
                                     href={`/folder/${fileDetails.data.parentId}`}
                                     className="flex items-center rounded-lg p-0.5 hover:bg-zinc-200 dark:hover:bg-zinc-900"
