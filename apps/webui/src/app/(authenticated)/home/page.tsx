@@ -6,7 +6,8 @@ export default async function Home() {
     const session = await getServerSession();
 
     if (session.status === "error") {
-        return <></>;
+        // Redirect to login page
+        redirect(`/login`);
     }
 
     // Redirect to user's root folder
