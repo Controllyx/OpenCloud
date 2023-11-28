@@ -75,7 +75,7 @@ export default async function FileView({ params }: { params: { fileId: string } 
                             <div className="mx-4">
                                 <Link
                                     href={`/folder/${fileDetails.data.parentId}`}
-                                    className="flex items-center rounded-xl p-1 hover:bg-zinc-200 dark:hover:bg-zinc-900"
+                                    className="flex items-center rounded-lg p-0.5 hover:bg-zinc-200 dark:hover:bg-zinc-900"
                                 >
                                     <X className="h-10 w-10" />
                                 </Link>

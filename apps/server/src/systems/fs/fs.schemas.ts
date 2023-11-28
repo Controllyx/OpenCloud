@@ -32,6 +32,13 @@ const getThumbnailParamsSchema = z.object({
     }),
 });
 
+const downloadFileParamsSchema = z.object({
+    fileId: z.string({
+        required_error: "File ID is required",
+        invalid_type_error: "File ID must be a string",
+    }),
+});
+
 const deleteFileQuerySchema = z.object({
     fileId: z.string({
         required_error: "File ID is required",
@@ -47,6 +54,7 @@ const deleteFileResponseSchema = z.object({
 export type GetDetailsQuerystring = z.infer<typeof getDetailsQuerySchema>;
 export type GetFileParams = z.infer<typeof getFileParamsSchema>;
 export type GetThumbnailParams = z.infer<typeof getThumbnailParamsSchema>;
+export type DownloadFileParams = z.infer<typeof downloadFileParamsSchema>;
 export type DeleteFileQuerystring = z.infer<typeof deleteFileQuerySchema>;
 
 export const { schemas: fsSchemas, $ref } = buildJsonSchemas(
@@ -55,6 +63,7 @@ export const { schemas: fsSchemas, $ref } = buildJsonSchemas(
         getDetailsResponseSchema,
         getFileParamsSchema,
         getThumbnailParamsSchema,
+        downloadFileParamsSchema,
         deleteFileQuerySchema,
         deleteFileResponseSchema,
     },

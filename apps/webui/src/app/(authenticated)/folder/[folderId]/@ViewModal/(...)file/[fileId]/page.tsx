@@ -4,6 +4,7 @@ import path from "path";
 
 import { env } from "@/env/env.mjs";
 import { PreviewPane } from "@/components/file-system/file-view/preview-pane";
+import ViewModalToolbar from "./toolbar";
 
 export default async function FileView({ params }: { params: { fileId: string } }) {
     const cookieStore = cookies();
@@ -24,8 +25,12 @@ export default async function FileView({ params }: { params: { fileId: string } 
 
     return (
         <>
-            <div className="border-b border-zinc-400 px-6 py-4 text-xl font-semibold dark:border-zinc-700">
-                {fileDetails.data.name}
+            <div className="flex w-full flex-row items-center justify-between border-b border-zinc-400 py-4 pl-6 pr-4 text-xl font-semibold dark:border-zinc-700">
+                <div className="">{fileDetails.data.name}</div>
+                <div></div>
+                <div className="">
+                    <ViewModalToolbar fileId={fileDetails.data.id} />
+                </div>
             </div>
             <div className="relative h-full overflow-hidden">
                 <PreviewPane fileId={params.fileId} fileType={fileDetails.data.fileType} />
