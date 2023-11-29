@@ -12,19 +12,20 @@ datasource db {
 
 // Models
 model User {
-    id                   String         @id @default(cuid())
-    username             String         @unique
+    id                   String            @id @default(cuid())
+    username             String            @unique
     firstName            String?
     lastName             String?
     password             String
-    role                 Role           @default(USER)
+    role                 Role              @default(USER)
     rootFolderId         String?
     refreshTokens        RefreshToken[]
     uploadTokens         UploadToken[]
     accessControlRuleIds String[]
-    displayOrders        DisplayOrder[]
-    createdAt            DateTime       @default(now())
-    updatedAt            DateTime       @default(now()) @updatedAt
+    defaultDisplayType   DisplayType       @default(GRID)
+    displaySettings      DisplaySettings[]
+    createdAt            DateTime          @default(now())
+    updatedAt            DateTime          @default(now()) @updatedAt
 
     @@map("Users")
 }
@@ -97,15 +98,16 @@ model File {
     @@map("Files")
 }
 
-model DisplayOrder {
-    id        String        @id @default(cuid())
-    user      User          @relation(fields: [userId], references: [id])
-    userId    String
-    folderId  String
-    Type      SortType
-    Order     SortDirection
-    createdAt DateTime      @default(now())
-    updatedAt DateTime      @default(now()) @updatedAt
+model DisplaySettings {
+    id          String        @id @default(cuid())
+    user        User          @relation(fields: [userId], references: [id])
+    userId      String
+    folderId    String
+    DisplayType DisplayType
+    SortType    SortType
+    SortOrder   SortDirection
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @default(now()) @updatedAt
 
     @@map("DisplayOrders")
 }
@@ -134,6 +136,11 @@ enum FileAccess {
     PRIVATE
     PROTECTED
     PUBLIC
+}
+
+enum DisplayType {
+    GRID
+    LIST
 }
 
 enum SortType {
