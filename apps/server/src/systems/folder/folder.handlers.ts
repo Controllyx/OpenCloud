@@ -43,7 +43,7 @@ export async function getContentsHandler(
     const user = await this.prisma.user.findUnique({
         where: { id: request.user.id },
         select: {
-            displayOrders: {
+            displaySettings: {
                 where: { folderId: folderId },
             },
         },
@@ -53,11 +53,15 @@ export async function getContentsHandler(
         return reply.code(500).send({ message: "User not found" });
     }
 
-    const sortDirection = user.displayOrders[0] ? (user.displayOrders[0].Order === "ASC" ? "asc" : "desc") : "asc";
+    const sortDirection = user.displaySettings[0]
+        ? user.displaySettings[0].SortOrder === "ASC"
+            ? "asc"
+            : "desc"
+        : "asc";
 
     let contents;
 
-    if (!user.displayOrders[0] || user.displayOrders[0].Type === "NAME") {
+    if (!user.displaySettings[0] || user.displaySettings[0].SortType === "NAME") {
         contents = await this.prisma.folder.findFirst({
             where: { id: folderId },
             select: {
@@ -71,7 +75,7 @@ export async function getContentsHandler(
                 },
             },
         });
-    } else if (user.displayOrders[0].Type === "DATE_CREATED") {
+    } else if (user.displaySettings[0].SortType === "DATE_CREATED") {
         contents = await this.prisma.folder.findFirst({
             where: { id: folderId },
             select: {
@@ -85,7 +89,7 @@ export async function getContentsHandler(
                 },
             },
         });
-    } else if (user.displayOrders[0].Type === "SIZE") {
+    } else if (user.displaySettings[0].SortType === "SIZE") {
         contents = await this.prisma.folder.findFirst({
             where: { id: folderId },
             select: {
