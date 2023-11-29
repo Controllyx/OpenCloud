@@ -33,7 +33,7 @@ export default function Loading() {
                         >
                             <div className="flex items-center">
                                 <div className="block px-4 py-3">
-                                    <Folder className="h-6 text-zinc-900" />
+                                    <Folder className="h-5 text-zinc-900" />
                                 </div>
                                 <div className="mr-2.5 h-6 w-full truncate rounded-lg bg-zinc-900/60"></div>
                             </div>
@@ -52,7 +52,7 @@ export default function Loading() {
                         >
                             <div className="flex items-center">
                                 <div className="block px-4 py-3">
-                                    <File className="h-6 text-zinc-900" />
+                                    <File className="h-5 text-zinc-900" />
                                 </div>
                                 <div className="mr-2.5 h-6 w-full truncate rounded-lg bg-zinc-900/60"></div>
                             </div>

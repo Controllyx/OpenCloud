@@ -22,9 +22,9 @@ export function FolderGridCell({ folderId, folderName }: { folderId: string; fol
             <div className="rounded-xl border border-zinc-200 bg-white text-zinc-950 shadow-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50">
                 <div className="flex items-center">
                     <div className="block px-4 py-3">
-                        <Folder className="h-6" />
+                        <Folder className="h-5" />
                     </div>
-                    <div className="truncate select-none">{folderName}</div>
+                    <div className="select-none truncate">{folderName}</div>
                 </div>
             </div>
         </div>
@@ -46,9 +46,9 @@ export function FileGridCell({ fileId, fileName }: { fileId: string; fileName: s
             <div className="rounded-xl border border-zinc-200 bg-white text-zinc-950 shadow-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50">
                 <div className="flex items-center">
                     <div className="block px-4 py-3">
-                        <File className="h-6" />
+                        <File className="h-5" />
                     </div>
-                    <div className="truncate select-none">{fileName}</div>
+                    <div className="select-none truncate">{fileName}</div>
                 </div>
                 <div className="px-2.5 pb-2">
                     <Image
