@@ -60,7 +60,14 @@ export default async function FileView({ params }: { params: { fileId: string } 
                 <div className="flex h-full w-full flex-row items-center border-b border-zinc-300 dark:border-zinc-700">
                     <div className="flex basis-1/3 justify-start">
                         <div className="w-width-sidebar text-center">
-                            <span className="self-center whitespace-nowrap text-4xl font-semibold">{"OpenCloud"}</span>
+                            <Link
+                                href={session.status === "success" ? `/folder/${session.data.user.rootFolderId}` : `/`}
+                                className="block"
+                            >
+                                <span className="self-center whitespace-nowrap text-4xl font-semibold">
+                                    {"OpenCloud"}
+                                </span>
+                            </Link>
                         </div>
                     </div>
 
