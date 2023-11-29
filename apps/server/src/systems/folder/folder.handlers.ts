@@ -40,17 +40,67 @@ export async function getContentsHandler(
 ) {
     const folderId = request.query.folderId;
 
-    const contents = await this.prisma.folder.findFirst({
-        where: { id: folderId },
+    const user = await this.prisma.user.findUnique({
+        where: { id: request.user.id },
         select: {
-            childFiles: {
-                select: { id: true, fileName: true },
-            },
-            childFolders: {
-                select: { id: true, folderName: true },
+            displayOrders: {
+                where: { folderId: folderId },
             },
         },
     });
+
+    if (!user) {
+        return reply.code(500).send({ message: "User not found" });
+    }
+
+    const sortDirection = user.displayOrders[0] ? (user.displayOrders[0].Order === "ASC" ? "asc" : "desc") : "asc";
+
+    let contents;
+
+    if (!user.displayOrders[0] || user.displayOrders[0].Type === "NAME") {
+        contents = await this.prisma.folder.findFirst({
+            where: { id: folderId },
+            select: {
+                childFolders: {
+                    select: { id: true, folderName: true },
+                    orderBy: { folderName: sortDirection },
+                },
+                childFiles: {
+                    select: { id: true, fileName: true },
+                    orderBy: { fileName: sortDirection },
+                },
+            },
+        });
+    } else if (user.displayOrders[0].Type === "DATE_CREATED") {
+        contents = await this.prisma.folder.findFirst({
+            where: { id: folderId },
+            select: {
+                childFolders: {
+                    select: { id: true, folderName: true },
+                    orderBy: { createdAt: sortDirection },
+                },
+                childFiles: {
+                    select: { id: true, fileName: true },
+                    orderBy: { createdAt: sortDirection },
+                },
+            },
+        });
+    } else if (user.displayOrders[0].Type === "SIZE") {
+        contents = await this.prisma.folder.findFirst({
+            where: { id: folderId },
+            select: {
+                // Folders default to sort ascending by name when sorting by size
+                childFolders: {
+                    select: { id: true, folderName: true },
+                    orderBy: { folderName: "asc" },
+                },
+                childFiles: {
+                    select: { id: true, fileName: true },
+                    orderBy: { fileSize: sortDirection },
+                },
+            },
+        });
+    }
 
     if (!contents) {
         return reply.code(404).send({ message: "Something went wrong. Please try again." });
