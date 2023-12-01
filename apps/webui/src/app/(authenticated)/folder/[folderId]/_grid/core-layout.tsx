@@ -1,11 +1,10 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { z } from "zod";
 import { Upload, ArrowDownUp } from "lucide-react";
 
 import { env } from "@/env/env.mjs";
-// import { getFolderDetails, getFolderContents } from "../page";
+import { parseFolderDetails, parseFolderContents } from "../folder-fetch";
 import { Breadcrumb } from "../breadcrumb";
 import { FolderGridCell, FileGridCell } from "./grid-cell";
 
@@ -76,17 +75,7 @@ async function getFolderDetails(folderId: string) {
         credentials: "include",
     });
 
-    if (!response.ok) {
-        throw new Error("Failed to fetch data");
-    }
-
-    const parsedFolderDetails = getFolderDetailsSchema.safeParse(await response.json());
-
-    if (parsedFolderDetails.success === false) {
-        throw new Error("Failed to parse data");
-    }
-
-    return parsedFolderDetails;
+    return parseFolderDetails(response);
 }
 
 async function getFolderContents(folderId: string) {
@@ -97,44 +86,5 @@ async function getFolderContents(folderId: string) {
         },
     );
 
-    if (!response.ok) {
-        throw new Error("Failed to fetch data");
-    }
-
-    const parsedFolderContents = getFolderContentsSchema.safeParse(await response.json());
-
-    if (parsedFolderContents.success === false) {
-        throw new Error("Failed to parse data");
-    }
-
-    return parsedFolderContents;
+    return parseFolderContents(response);
 }
-
-const getFolderDetailsSchema = z.object({
-    id: z.string(),
-    name: z.string(),
-    type: z.string(),
-    hierarchy: z
-        .object({
-            id: z.string(),
-            name: z.string(),
-            type: z.string(),
-        })
-        .array(),
-});
-
-const folderSchema = z.object({
-    id: z.string(),
-    folderName: z.string(),
-});
-
-const fileSchema = z.object({
-    id: z.string(),
-    fileName: z.string(),
-});
-
-const getFolderContentsSchema = z.object({
-    id: z.string(),
-    folders: folderSchema.array(),
-    files: fileSchema.array(),
-});

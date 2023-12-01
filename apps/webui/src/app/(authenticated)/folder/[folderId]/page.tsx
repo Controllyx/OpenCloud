@@ -1,8 +1,8 @@
 import { cookies } from "next/headers";
-import { z } from "zod";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 
 import { env } from "@/env/env.mjs";
+import { parseFolderDetails, parseFolderContents } from "./folder-fetch";
 import { GridLayout } from "./_grid/core-layout";
 
 export default async function FolderView({ params }: { params: { folderId: string } }) {
@@ -33,17 +33,7 @@ async function getFolderDetails(folderId: string) {
         headers: { Cookie: cookies().toString() },
     });
 
-    if (!response.ok) {
-        throw new Error("Failed to fetch data");
-    }
-
-    const parsedFolderDetails = getFolderDetailsSchema.safeParse(await response.json());
-
-    if (parsedFolderDetails.success === false) {
-        throw new Error("Failed to parse data");
-    }
-
-    return parsedFolderDetails;
+    return parseFolderDetails(response);
 }
 
 async function getFolderContents(folderId: string) {
@@ -54,44 +44,5 @@ async function getFolderContents(folderId: string) {
         },
     );
 
-    if (!response.ok) {
-        throw new Error("Failed to fetch data");
-    }
-
-    const parsedFolderContents = getFolderContentsSchema.safeParse(await response.json());
-
-    if (parsedFolderContents.success === false) {
-        throw new Error("Failed to parse data");
-    }
-
-    return parsedFolderContents;
+    return parseFolderContents(response);
 }
-
-const getFolderDetailsSchema = z.object({
-    id: z.string(),
-    name: z.string(),
-    type: z.string(),
-    hierarchy: z
-        .object({
-            id: z.string(),
-            name: z.string(),
-            type: z.string(),
-        })
-        .array(),
-});
-
-const folderSchema = z.object({
-    id: z.string(),
-    folderName: z.string(),
-});
-
-const fileSchema = z.object({
-    id: z.string(),
-    fileName: z.string(),
-});
-
-const getFolderContentsSchema = z.object({
-    id: z.string(),
-    folders: folderSchema.array(),
-    files: fileSchema.array(),
-});
