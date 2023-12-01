@@ -1,50 +1,35 @@
-import { z } from "zod";
-
 import { cookies } from "next/headers";
-import { Upload, ArrowDownUp } from "lucide-react";
+import { z } from "zod";
+import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 
 import { env } from "@/env/env.mjs";
-import { Breadcrumb } from "./breadcrumb";
 import { GridLayout } from "./_grid/core-layout";
 
 export default async function FolderView({ params }: { params: { folderId: string } }) {
     const folderId = params.folderId;
 
-    const folderDetailsPromise = getFolderDetails(folderId);
-    const folderContentsPromise = getFolderContents(folderId);
+    const queryClient = new QueryClient();
 
-    const [folderDetails, folderContents] = await Promise.all([folderDetailsPromise, folderContentsPromise]);
+    const folderDetailsQuery = queryClient.prefetchQuery({
+        queryKey: ["folder-details", folderId],
+        queryFn: () => getFolderDetails(folderId),
+    });
+    const folderContentsQuery = queryClient.prefetchQuery({
+        queryKey: ["folder-contents", folderId],
+        queryFn: () => getFolderContents(folderId),
+    });
+
+    await Promise.all([folderDetailsQuery, folderContentsQuery]);
 
     return (
-        <div className="h-full w-full px-6 py-6">
-            <div className="mb-5 flex flex-row items-center justify-between rounded-2xl border-2 border-zinc-300 p-1 dark:border-zinc-800">
-                <button className="flex items-center rounded-xl px-5 py-2.5 hover:bg-zinc-200 dark:hover:bg-zinc-900">
-                    <Upload className="mr-4 h-6" />
-                    <span className="items-center self-center whitespace-nowrap text-lg font-semibold">Upload</span>
-                </button>
-
-                <div></div>
-
-                <button className="flex items-center rounded-xl px-5 py-2.5 hover:bg-zinc-200 dark:hover:bg-zinc-900">
-                    <ArrowDownUp className="mr-4 h-6" />
-                    <span className="items-center self-center whitespace-nowrap text-lg font-semibold">Sort</span>
-                </button>
-            </div>
-
-            <div className="mx-0.5">
-                <div className="mb-6">
-                    <Breadcrumb folderDetails={folderDetails.data} />
-                </div>
-
-                <GridLayout folders={folderContents.data.folders} files={folderContents.data.files} />
-            </div>
-        </div>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+            <GridLayout folderId={folderId} />
+        </HydrationBoundary>
     );
 }
 
 async function getFolderDetails(folderId: string) {
     const response = await fetch(`${env.NEXT_PUBLIC_OPENCLOUD_SERVER_URL}/v1/folder/get-details?folderId=${folderId}`, {
-        cache: "no-store",
         headers: { Cookie: cookies().toString() },
     });
 
@@ -55,7 +40,7 @@ async function getFolderDetails(folderId: string) {
     const parsedFolderDetails = getFolderDetailsSchema.safeParse(await response.json());
 
     if (parsedFolderDetails.success === false) {
-        throw new Error("Failed to fetch data");
+        throw new Error("Failed to parse data");
     }
 
     return parsedFolderDetails;
@@ -65,7 +50,6 @@ async function getFolderContents(folderId: string) {
     const response = await fetch(
         `${env.NEXT_PUBLIC_OPENCLOUD_SERVER_URL}/v1/folder/get-contents?folderId=${folderId}`,
         {
-            cache: "no-store",
             headers: { Cookie: cookies().toString() },
         },
     );
@@ -77,7 +61,7 @@ async function getFolderContents(folderId: string) {
     const parsedFolderContents = getFolderContentsSchema.safeParse(await response.json());
 
     if (parsedFolderContents.success === false) {
-        throw new Error("Failed to fetch data");
+        throw new Error("Failed to parse data");
     }
 
     return parsedFolderContents;
