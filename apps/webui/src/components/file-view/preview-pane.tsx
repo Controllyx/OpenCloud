@@ -1,5 +1,5 @@
-import { ImagePreviewPane } from "@/components/file-system/file-view/file-types/image";
-import { OfficePreviewPane } from "@/components/file-system/file-view/file-types/office";
+import { ImagePreviewPane } from "@/components/file-view/file-types/image";
+import { OfficePreviewPane } from "@/components/file-view/file-types/office";
 
 export function PreviewPane({ fileId, fileType }: { fileId: string; fileType: string }) {
     if (fileType.startsWith("image/")) {

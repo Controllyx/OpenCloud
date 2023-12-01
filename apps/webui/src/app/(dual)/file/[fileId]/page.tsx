@@ -7,7 +7,7 @@ import { Download, X } from "lucide-react";
 
 import { env } from "@/env/env.mjs";
 import { getServerSession } from "@/components/auth/server-session";
-import { PreviewPane } from "@/components/file-system/file-view/preview-pane";
+import { PreviewPane } from "@/components/file-view/preview-pane";
 
 export async function generateMetadata({ params }: { params: { fileId: string } }): Promise<Metadata> {
     const fileId = path.parse(params.fileId).name;

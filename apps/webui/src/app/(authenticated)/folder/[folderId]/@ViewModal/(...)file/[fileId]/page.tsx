@@ -3,7 +3,7 @@ import { z } from "zod";
 import path from "path";
 
 import { env } from "@/env/env.mjs";
-import { PreviewPane } from "@/components/file-system/file-view/preview-pane";
+import { PreviewPane } from "@/components/file-view/preview-pane";
 import ViewModalToolbar from "./toolbar";
 
 export default async function FileView({ params }: { params: { fileId: string } }) {

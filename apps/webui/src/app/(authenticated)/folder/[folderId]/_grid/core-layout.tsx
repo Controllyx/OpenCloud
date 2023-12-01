@@ -1,4 +1,4 @@
-import { FolderGridCell, FileGridCell } from "@/components/file-system/grid/grid-cell";
+import { FolderGridCell, FileGridCell } from "./grid-cell";
 
 export function GridLayout({
     folders,

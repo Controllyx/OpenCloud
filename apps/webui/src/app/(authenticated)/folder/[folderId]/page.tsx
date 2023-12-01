@@ -4,8 +4,8 @@ import { cookies } from "next/headers";
 import { Upload, ArrowDownUp } from "lucide-react";
 
 import { env } from "@/env/env.mjs";
-import { Breadcrumb } from "@/components/file-system/breadcrumb";
-import { GridLayout } from "@/components/file-system/grid/core-layout";
+import { Breadcrumb } from "./breadcrumb";
+import { GridLayout } from "./_grid/core-layout";
 
 export default async function FolderView({ params }: { params: { folderId: string } }) {
     const folderId = params.folderId;
