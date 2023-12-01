@@ -30,7 +30,9 @@ export async function generateMetadata({ params }: { params: { fileId: string } 
     return {
         title: `OpenCloud - ${fileDetails.data.name}`,
         openGraph: {
-            images: [`https://opencloud-api.devmwang.com/v1/files/get/${fileId}${path.extname(fileDetails.data.name)}`],
+            images: [
+                `${env.NEXT_PUBLIC_OPENCLOUD_SERVER_URL}/v1/files/get/${fileId}${path.extname(fileDetails.data.name)}`,
+            ],
         },
     };
 }
