@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
@@ -8,7 +10,7 @@ export function Breadcrumb({
 }) {
     return (
         <div className="-mx-3 flex items-center text-3xl font-semibold">
-            {folderDetails.hierarchy.toReversed().map((folder) => {
+            {folderDetails.hierarchy.slice().reverse().map((folder) => {
                 return (
                     <div key={folder.id} className="flex items-center">
                         <BreadcrumbFolder folderName={folder.name} folderId={folder.id} />
