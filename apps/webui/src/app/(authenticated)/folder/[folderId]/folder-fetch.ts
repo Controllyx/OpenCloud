@@ -1,5 +1,10 @@
 import { z } from "zod";
 
+import { env } from "@/env/env.mjs";
+
+export const folderDetailsUrl = `${env.NEXT_PUBLIC_OPENCLOUD_SERVER_URL}/v1/folder/get-details?folderId=`;
+export const folderContentsUrl = `${env.NEXT_PUBLIC_OPENCLOUD_SERVER_URL}/v1/folder/get-contents?folderId=`;
+
 export async function parseFolderDetails(fetchResponse: Response) {
     if (!fetchResponse.ok) {
         throw new Error("Failed to fetch data");

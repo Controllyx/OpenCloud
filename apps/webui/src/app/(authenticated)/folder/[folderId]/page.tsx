@@ -1,8 +1,7 @@
 import { cookies } from "next/headers";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 
-import { env } from "@/env/env.mjs";
-import { parseFolderDetails, parseFolderContents } from "./folder-fetch";
+import { folderDetailsUrl, folderContentsUrl, parseFolderDetails, parseFolderContents } from "./folder-fetch";
 import { GridLayout } from "./_grid/core-layout";
 
 export default async function FolderView({ params }: { params: { folderId: string } }) {
@@ -29,7 +28,7 @@ export default async function FolderView({ params }: { params: { folderId: strin
 }
 
 async function getFolderDetails(folderId: string) {
-    const response = await fetch(`${env.NEXT_PUBLIC_OPENCLOUD_SERVER_URL}/v1/folder/get-details?folderId=${folderId}`, {
+    const response = await fetch(`${folderDetailsUrl}${folderId}`, {
         headers: { Cookie: cookies().toString() },
     });
 
@@ -37,12 +36,9 @@ async function getFolderDetails(folderId: string) {
 }
 
 async function getFolderContents(folderId: string) {
-    const response = await fetch(
-        `${env.NEXT_PUBLIC_OPENCLOUD_SERVER_URL}/v1/folder/get-contents?folderId=${folderId}`,
-        {
-            headers: { Cookie: cookies().toString() },
-        },
-    );
+    const response = await fetch(`${folderContentsUrl}${folderId}`, {
+        headers: { Cookie: cookies().toString() },
+    });
 
     return parseFolderContents(response);
 }

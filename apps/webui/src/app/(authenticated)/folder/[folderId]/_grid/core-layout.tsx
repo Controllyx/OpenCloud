@@ -3,8 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Upload, ArrowDownUp } from "lucide-react";
 
-import { env } from "@/env/env.mjs";
-import { parseFolderDetails, parseFolderContents } from "../folder-fetch";
+import { folderDetailsUrl, folderContentsUrl, parseFolderDetails, parseFolderContents } from "../folder-fetch";
 import { Breadcrumb } from "../breadcrumb";
 import { FolderGridCell, FileGridCell } from "./grid-cell";
 
@@ -71,7 +70,7 @@ export function GridLayout({ folderId }: { folderId: string }) {
 }
 
 async function getFolderDetails(folderId: string) {
-    const response = await fetch(`${env.NEXT_PUBLIC_OPENCLOUD_SERVER_URL}/v1/folder/get-details?folderId=${folderId}`, {
+    const response = await fetch(`${folderDetailsUrl}${folderId}`, {
         credentials: "include",
     });
 
@@ -79,12 +78,9 @@ async function getFolderDetails(folderId: string) {
 }
 
 async function getFolderContents(folderId: string) {
-    const response = await fetch(
-        `${env.NEXT_PUBLIC_OPENCLOUD_SERVER_URL}/v1/folder/get-contents?folderId=${folderId}`,
-        {
-            credentials: "include",
-        },
-    );
+    const response = await fetch(`${folderContentsUrl}${folderId}`, {
+        credentials: "include",
+    });
 
     return parseFolderContents(response);
 }
